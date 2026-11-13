@@ -57,7 +57,9 @@ python backup_zip.py ~/Documents
 
 ## Get GrabKit
 
-**[$9.99 on Gumroad →](https://gumroad.com/l/grabkit-automation-scripts)**
+**[Download GrabKit on GitHub →](https://github.com/Des3uct0r/grabkit)**
+
+Also available on Gumroad ($9.99): https://gumroad.com/l/grabkit-automation-scripts (coming soon)
 
 Pay-what-you-want with $5 minimum. 30-day refund. Lifetime updates.
 
