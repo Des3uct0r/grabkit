@@ -3,7 +3,9 @@
 **Organize files, find duplicates, resize photos, merge PDFs, back up folders — in one command. No coding needed.**
 
 [![Gumroad](https://img.shields.io/badge/Buy%20on-Gumroad-ff90e8?style=for-the-badge)](https://gumroad.com/l/grabkit-automation-scripts)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/Des3uct0r/grabkit?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases)
+[![GitHub stars](https://img.shields.io/github/stars/Des3uct0r/grabkit?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/Des3uct0r/grabkit/total?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases)
 
 ---
 
