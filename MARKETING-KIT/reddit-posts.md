@@ -1,8 +1,19 @@
-# Reddit Posts — GrabKit (copy/paste ready)
+# Reddit Posts — GrabKit
 
-Post to these subreddits (check each sub's self-promo rules; most allow 1 promo post per week/month).
+> **STATUS (verified against live subreddit rules, Nov 2026) — the old posting plan is dead:**
+> - r/productivity → rules: "No Advertising", "No AI-generated posts" → **do not post**
+> - r/Entrepreneur → "No promotion, sales, or solicitation", "Original and human content only" → **do not post**
+> - r/smallbusiness → "No business promotion posts" → **do not post**
+> - r/DataHoarder → "No unapproved sale threads, advertisement posts, or giveaways", "No AI generated slop" → **do not post**
+> - r/Python → showcases allowed with flair but "No Paywalled Content" (the pack costs $9.99) → **do not post**
+> - r/SideProject → no restrictions found → **POSTED** (https://www.reddit.com/r/SideProject/comments/1xvg8qr/i_built_grabkit_12_onecommand_python_tools_for/)
+> - r/IMadeThis → no restrictions found → **blocked by new-account rate limit; retry after 19 minutes**
+>
+> Use the sections below only for future subreddits with explicit promo allowances. Re-check `/r/<sub>/about/rules.json` via a logged-in session (it returns JSON; anonymous requests are 403).
+>
+> The compliant pattern: text post, build-in-public format, sources stdlib-first, disclose self-promotion plainly, no AI-generated filler.
 
-## r/productivity
+## r/productivity (Archived — rule-blocked)
 **Title:** I built 12 one-command tools that clean up Downloads folders, find duplicates, and resize photos — free preview, $9.99
 
 **Body:**
@@ -20,24 +31,23 @@ I'm selling the pack for $9.99 on Gumroad (pay-what-you-want, $5 min): [LINK]
 
 Happy to answer questions about any of the tools.
 
-## r/Python
-**Title:** [Tool] GrabKit — 12 stdlib-only automation scripts (file organizer, dedup, backup, etc.) with dry-run safety
+## r/SideProject (POSTED)
+**Body:** build-in-public format — what it is, who it's for, free preview link, disclosure of paid product. Posted link: https://www.reddit.com/r/SideProject/comments/1xvg8qr/i_built_grabkit_12_onecommand_python_tools_for/
 
-**Body:**
-I packaged 12 small automation scripts into one pack. 9 of 12 use only the standard library; the other 3 (PDF, image resize, link scrape) tell you the one-line pip install if you want them.
+## r/IMadeThis (retry after rate limit)
+**Body (posted once limit clears):**
+Built a thing I needed for myself: GrabKit — 12 Python automation scripts, each one command:
+- File organizer (dry-run first), duplicate finder (by content), timestamped backup zip,
+- Bulk rename, find & replace, folder size analyzer, CSV toolkit,
+- PDF merge/split, image bulk resize, link scraper, text diff, password tools
+Stdlib-first, previews before anything changes, nothing deleted without your confirmation. Python 3.8+.
 
-Highlights:
-- `file_organizer.py` — sorts a folder by extension into Images/Documents/Audio/Video/Archives, with `--dry-run`
-- `duplicate_finder.py` — hashes files in two passes (size first, then hash), reports wasted space per group
-- `backup_zip.py` — timestamped zip of any folder, excludes .git/node_modules by default
-- `find_replace.py` — replace text across hundreds of files, writes .bak backups automatically
+Free preview (3 scripts + README): https://github.com/Des3uct0r/grabkit
+Full pack ($9.99, pay-what-you-want, $5 min): https://github.com/Des3uct0r/grabkit/releases/tag/v1.0
 
-Safety-first design: every destructive operation previews first and requires confirmation. No files are deleted without explicit OK.
+Disclosure: I made this and it's a paid product; the preview repo is free. Questions about how any tool works — ask away.
 
-Repo: [GITHUB LINK]
-Pack (with setup guide + examples): [GUMROAD LINK] $9.99
-
-## r/DataHoarder
+## r/DataHoarder (Archived — rule-blocked)
 **Title:** One-command duplicate finder + folder size analyzer (Python, stdlib, dry-run safe)
 
 **Body:**
@@ -50,7 +60,7 @@ Both stdlib-only, work on Windows/Mac/Linux, preview before acting.
 
 Full pack (12 tools incl. backup zip, bulk rename, image resize): [GUMROAD LINK] $9.99
 
-## r/smallbusiness
+## r/smallbusiness (Archived — rule-blocked)
 **Title:** Automate the boring file tasks on your work computer (organize, dedup, resize photos, merge PDFs)
 
 **Body:**
@@ -60,7 +70,7 @@ No coding needed — just open a terminal, type one line, preview the result, th
 
 $9.99 one-time, lifetime updates: [GUMROAD LINK]
 
-## r/Entrepreneur (value post, soft CTA)
+## r/Entrepreneur (Archived — rule-blocked)
 **Title:** How I turned 12 boring Python scripts into a $9.99 digital product
 
 **Body:**
