@@ -29,9 +29,12 @@ pages, extract specific pages, or get an info report."
 
 ---
 
+## Gig 4 — Full Pack delivery (copy/paste ready)
+See `SALES-KIT/fiverr-gig-full-pack.md` — complete copy (title, 3 pricing tiers $15/$29/$59, description, requirements, gallery, minor-disclosure line) for selling GrabKit as a service via Fiverr delivery.
+
 ## Gig checklist (once per gig)
 1. Create gig with the title above, category: Programming & Tech → Desktop Applications or File Conversion
-2. Add 3 gallery images: before/after folder screenshot, the tool's dry-run output, the tool table from the Gumroad listing
+2. Add 3 gallery images from `GIG-IMAGES/`: e.g. gig-cover.png, gig-organizer.png, pdf-cover.png (or etsy-inside.png for the 12-tool view)
 3. Set requirements: ask buyer for files + a one-line description of the job
 4. Turn on "Express delivery" if available
 
