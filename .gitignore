@@ -30,7 +30,10 @@ PAYMENT.local.md
 # Keep only the two screenshots used by the live site; the rest are local marketing assets.
 /GIG-IMAGES/*
 !/GIG-IMAGES/grabkit-desktop.png
-!/GIG-IMAGES/gumroad-cover.png
+!/GIG-IMAGES/cover.png
 
 PhotoKit-Desktop-*.zip
 CleanKit-Desktop-*.zip
+
+TextKit-Desktop-*.zip
+WebKit-Desktop-*.zip
