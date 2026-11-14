@@ -23,3 +23,6 @@ PAYMENT.local.md
 # Download archives are published on the Releases page, not committed.
 /GrabKit-v1.zip
 /GrabKit-v1.1.zip
+
+# No sponsor button: the checkout page is linked in the README.
+/.github/FUNDING.yml
