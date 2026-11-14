@@ -268,7 +268,9 @@ def imap_sync(config, progress):
 def build_email(config, order):
     products = config.get("products", {})
     product = order["product"]
-    info = products.get(product) or next(iter(products.values()))
+    info = products.get(product)
+    if not info:
+        return None, None
     price = order["amount"] or info.get("price", "")
 
     msg = EmailMessage()
@@ -318,6 +320,9 @@ def send_email(config, msg):
 def deliver(config, order, progress):
     """Send the product to the buyer. Returns a status string."""
     msg, path = build_email(config, order)
+    if msg is None:
+        return ("Product '%s' is not configured — add it in Settings → Products "
+                "with the file to send." % order["product"])
     if not path.is_file():
         return "ZIP not found: %s — fix it in Settings → Products" % path
     if config.get("dry_run"):
@@ -795,7 +800,8 @@ class AdminApp:
             self.write("Settings saved.")
 
         ttk.Button(dialog, text="Save", command=save).pack(pady=(0, 10))
-        ttk.Button(dialog, text="Send test", command=self.test_email).pack(pady=(0, 10))
+        ttk.Button(dialog, text="Save & send test",
+                   command=lambda: (save(), self.test_email())).pack(pady=(0, 10))
 
 
 def main():
