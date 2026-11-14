@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+
+# Paid build artifacts: never publish these, they are what buyers pay for.
+GrabKit-Desktop-*.zip

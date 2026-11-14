@@ -61,6 +61,9 @@ python backup_zip.py ~/Documents
 
 Everything in this repo, plus the 3 paid-pro tools. 30-day refund on the paid version. Lifetime updates.
 
+Rather not touch a terminal? **[GrabKit Desktop](https://des3uct0r.github.io/grabkit/pro.html)** — all 16
+tools in one point-and-click window. 249 ₴ ($9), 30-day refund.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

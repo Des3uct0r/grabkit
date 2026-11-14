@@ -17,6 +17,7 @@ fetched (bad URL, no network, HTTP error).
 import argparse
 import csv
 import re
+import ssl
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -35,6 +36,25 @@ import urllib.error
 import urllib.request
 
 
+def open_url(request, timeout):
+    """urlopen, retrying without certificate checks if the CA store is broken.
+
+    Some Python installs (and corporate networks) ship without usable root
+    certificates, which would otherwise make every https page fail.
+    """
+    try:
+        return urllib.request.urlopen(request, timeout=timeout)
+    except urllib.error.URLError as exc:
+        reason = getattr(exc, "reason", exc)
+        if "CERTIFICATE_VERIFY_FAILED" not in str(reason):
+            raise
+        print("Note: certificate check failed, retrying without verification.")
+        context = ssl.create_default_context()
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+        return urllib.request.urlopen(request, timeout=timeout, context=context)
+
+
 def fetch_page(url):
     """Download a page's HTML. Returns the text or exits with code 2."""
     if requests is not None:
@@ -49,7 +69,7 @@ def fetch_page(url):
     else:
         request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         try:
-            with urllib.request.urlopen(request, timeout=DEFAULT_TIMEOUT) as response:
+            with open_url(request, DEFAULT_TIMEOUT) as response:
                 # Decode bytes into text with a forgiving fallback encoding.
                 data = response.read()
                 charset = response.headers.get_content_charset() or "utf-8"
@@ -128,7 +148,7 @@ def head_check(url):
         request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT},
                                          method="HEAD")
         try:
-            with urllib.request.urlopen(request, timeout=CHECK_TIMEOUT) as response:
+            with open_url(request, CHECK_TIMEOUT) as response:
                 return str(response.getcode())
         except urllib.error.HTTPError as exc:
             return str(exc.code)

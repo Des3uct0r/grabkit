@@ -3,6 +3,15 @@
 Small jobs your computer makes you do by hand — sorted in seconds with one command each.
 No coding, no installs, no accounts. Every tool previews what it will do before it does it.
 
+## Two ways to use it
+
+**1. Desktop app (no typing at all)** — double-click **`Start GrabKit.bat`** on Windows, or run
+`python3 grabkit_gui.py` anywhere. Pick a tool on the left, pick your folder, press **Run**.
+The output appears in the window, and anything destructive asks for confirmation first.
+
+**2. Command line** — every tool is a normal script; examples are below.
+
+
 ## Setup (2 minutes, once)
 
 1. Install Python 3.8+ from https://python.org (Windows: tick **"Add python.exe to PATH"** during install)

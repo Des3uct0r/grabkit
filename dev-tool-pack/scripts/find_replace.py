@@ -180,9 +180,8 @@ def main():
         print("Happy with the counts? Run the same command again with --apply.")
         print("Tip: add --backup to keep a .bak copy of every changed file.")
     if total_matches == 0:
-        print("Reminder: exit code 1 means 'no matches found'.")
-    if files_with_matches and not args.apply:
-        sys.exit(1)  # matches found but dry run: useful signal for scripts
+        print("Nothing matched — check the search text or the extensions.")
+        sys.exit(1)  # nothing found, matching greps' convention
 
 
 if __name__ == "__main__":
