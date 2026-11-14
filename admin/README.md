@@ -1,75 +1,63 @@
-# GrabKit Admin — order desk with one-click delivery
+# GrabKit Admin — orders and delivery in one window
 
-Local app for your PC. No server, no hosting bill, no third-party dashboard.
-Buyer order → you confirm the money → the ZIP is emailed automatically.
+Double-click **`Start Admin.bat`**. That is the whole installation.
+No server, no account, no password required.
 
-```
-order email  →  [Sync inbox]  →  order row appears
-             →  money on the card
-             →  [Confirm payment & send]  →  ZIP in the buyer's inbox
-```
+## The 3-click flow (default, works immediately)
 
-## Install (once, ~10 minutes)
+1. Buyer writes to you (email, OLX, Telegram) — copy their message.
+2. In the app: **Add order** → paste → **Add order**. The buyer's email is found
+   automatically. (If Gmail is set up, **Sync inbox** does this step by itself.)
+3. Money is on the card → select the order → **Confirm payment & send**.
 
-1. Double-click **`Start Admin.bat`**. The window opens with an empty order list.
-2. Click **Settings → Email** and fill in:
-   - `SMTP host` — `smtp.gmail.com`, port `465`
-   - `Your email` — `sviatpukas21@gmail.com`
-   - `App password (SMTP)` — see step 3
-   - `IMAP host` — `imap.gmail.com`, `Inbox email` — the same address
-   - `App password (IMAP)` — the same app password
-3. **Gmail app password** (normal password will NOT work):
-   - Google Account → Security → turn on **2-Step Verification**
-   - then https://myaccount.google.com/apppasswords → create "GrabKit" → copy the 16 characters
-4. **Settings → Products** — check that `File to send` points at the real
-   `GrabKit-Desktop-v1.1.zip` (the `…` button picks it).
-5. Leave **Dry run** ticked. Press **Test email** → it writes a `.eml` file into
-   `admin/outbox/` instead of sending. Open it — the ZIP must be attached.
-6. Untick **Dry run**, press **Test email** again to your own address, confirm the
-   attachment arrives. Now you are live.
+In this mode the app opens a finished email in your mail app with the ZIP already
+attached — you only press **Send**. No SMTP password, no configuration.
 
-## Daily use
+If no mail app is installed, it copies the message text and opens the folder with the
+ZIP selected, so you can paste it into Telegram and drag the file in.
 
-- **New order** — manual entry (or paste the buyer's message, press "Read from text").
-- **Sync inbox** — imports unread emails with subject starting `ORDER:` straight from Gmail.
-  Safe to press repeatedly: the same email is never imported twice.
-- **Confirm payment & send** — only press after you see the money **in the bank app**
-  (never trust a screenshot from the buyer). It emails the product and marks the order
-  delivered with a timestamp.
-- **Mark paid only** — money arrived but you want to send later.
-- **Export CSV** — opens in Excel for your records.
+## Optional: fully automatic sending
 
-## What the buyer sees
+Only if you want the app to send without opening your mail client.
 
-1. On `pro.html` they press **Order by email** — their mail app opens with
-   subject `ORDER: GrabKit Desktop` and the fields Name / Email / OS / What to clean up.
-2. You press **Sync inbox** → the order appears in the table, marked **New — not paid**.
-3. Money lands on the card. You press **Confirm payment & send**.
-4. They get an email with the ZIP attached and the setup instructions in the body.
-   The order turns green and gets a delivery timestamp.
+**Setup →** two fields: your email and an app password → **Save & send test**.
+After that the status line says `AUTO` and the same button sends silently.
 
-## Safety rules the app cannot enforce for you
+> ⚠️ **Some Google accounts cannot create app passwords.** School, university and
+> company (Workspace) accounts usually block it: the page says
+> *"App passwords are not available for your account"*. If you see that, stay in the
+> default manual mode — it works identically, just with one extra click.
+> Other options: a second personal @gmail.com, or a free sending service such as
+> Brevo (SMTP host `smtp-relay.brevo.com`, port 587) — then set the host manually in
+> `config.json`.
 
-1. Never ship on a screenshot. Check your bank app: amount and sender.
-2. Never send CVV, SMS codes or card expiry to anyone.
-3. If an order email asks for a refund, a "test payment" or a different card — it is a
-   scam attempt. Delete it.
+## What the app does for you
 
-## Files (all local, never published)
+| Button | What happens |
+|---|---|
+| **Sync inbox** | Imports unread `ORDER:` emails into the list. Never duplicates an email. |
+| **Confirm payment & send** | Sends (or opens) the product email, marks the order delivered with a timestamp. |
+| **Mark paid only** | Money arrived, send later. |
+| **No email? Deliver by hand** | Same delivery, but always manual. |
+| **Export CSV** | Orders in Excel. |
+
+Order statuses: `New — not paid` → `Paid` → `Delivered`. New rows are yellow, delivered
+rows are green.
+
+## Two rules that protect you
+
+1. **Only press the green button after you see the money in the bank app.** Never trust
+   a screenshot — they are easy to fake.
+2. **Never send card numbers, CVV or SMS codes to a buyer.** For an incoming payment
+   none of that is ever needed.
+
+## Files (local only, never uploaded)
 
 | File | What it is |
 |---|---|
-| `config.json` | SMTP/IMAP settings + app password + email template |
-| `orders.db` | SQLite database with every order |
-| `outbox/` | Dry-run emails (open with any mail client) |
-| `admin.log` | Timestamped log of everything the app did |
+| `config.json` | settings and (if you set it up) the app password |
+| `orders.db` | every order |
+| `outbox/` | generated emails/drafts |
+| `admin.log` | what the app did and when |
 
-These are in `.gitignore`. Do not upload them anywhere and do not send `config.json`
-to anyone — it contains your app password.
-
-## If email does not send
-
-- `SMTPAuthenticationError` → wrong app password, or 2-Step Verification is off.
-- Timeout → provider blocks port 465; try port 587.
-- "ZIP not found" → Settings → Products → pick the file again (it moved).
-- Still stuck → set Dry run back on and use the outbox `.eml` to send manually until fixed.
+All four are in `.gitignore`. Do not send `config.json` to anyone.

@@ -21,9 +21,11 @@ import re
 import ssl
 import smtplib
 import sqlite3
+import subprocess
 import sys
 import threading
 import traceback
+import webbrowser
 from datetime import datetime
 from email import message_from_bytes
 from email.header import decode_header, make_header
@@ -131,6 +133,24 @@ def load_config():
 def save_config(config):
     CONFIG_PATH.write_text(json.dumps(config, indent=2, ensure_ascii=False),
                            encoding="utf-8")
+
+
+def autodetect_product(config):
+    """Find the ZIP to sell without asking the user to browse for it."""
+    products = config.setdefault("products", {})
+    info = products.setdefault("GrabKit Desktop", {"price": "249 UAH", "file": ""})
+    if Path(info.get("file", "")).is_file():
+        return config
+    folders = [HERE / "product", HERE, HERE.parent, Path.home() / "Desktop"]
+    for folder in folders:
+        if not folder.is_dir():
+            continue
+        for cand in sorted(folder.glob("*.zip")):
+            name = cand.name.lower()
+            if "grabkit" in name and "desktop" in name:
+                info["file"] = str(cand)
+                return config
+    return config
 
 
 def connect_db():
@@ -292,6 +312,19 @@ def build_email(config, order):
     return msg, path
 
 
+def build_test_message(config):
+    msg = EmailMessage()
+    msg["Subject"] = "GrabKit Admin — test message"
+    msg["From"] = formataddr((config.get("from_name", "GrabKit"),
+                              config.get("smtp_user", "")))
+    msg["To"] = config.get("smtp_user", "")
+    msg.set_content(
+        "This is a test from GrabKit Admin.\n\n"
+        "If you can read this, the order desk will now deliver files to buyers "
+        "automatically when you press the green button.\n")
+    return msg
+
+
 def send_email(config, msg):
     host = config.get("smtp_host")
     port = int(config.get("smtp_port") or 465)
@@ -343,12 +376,15 @@ def deliver(config, order, progress):
 class AdminApp:
     def __init__(self, root):
         self.root = root
-        self.config = load_config()
+        self.config = autodetect_product(load_config())
+        save_config(self.config)
         self.db = connect_db()
         self.selected = None
         self.busy = False
         self._build()
         self.refresh()
+        if self.config.get("smtp_password") and self.config.get("imap_password"):
+            self.root.after(1200, self.sync)
 
     # ---------- layout ----------
     def _build(self):
@@ -373,9 +409,9 @@ class AdminApp:
         ttk.Label(top, text=APP_NAME, style="Title.TLabel").pack(side="left")
         self.mode = ttk.Label(top, text="", style="Muted.TLabel")
         self.mode.pack(side="left", padx=(12, 0))
-        ttk.Button(top, text="Settings", command=self.open_settings
+        ttk.Button(top, text="Setup", command=self.open_settings
                    ).pack(side="right")
-        ttk.Button(top, text="Test email", command=self.test_email
+        ttk.Button(top, text="Send test", command=self.test_email
                    ).pack(side="right", padx=(0, 6))
         self.sync_btn = ttk.Button(top, text="Sync inbox", command=self.sync)
         self.sync_btn.pack(side="right", padx=(0, 6))
@@ -428,6 +464,8 @@ class AdminApp:
                    command=self.delete_order).pack(side="left", padx=(8, 0))
         ttk.Button(actions, text="Copy email",
                    command=self.copy_email).pack(side="left", padx=(8, 0))
+        ttk.Button(actions, text="No email? Deliver by hand",
+                   command=self.manual_delivery).pack(side="left", padx=(8, 0))
 
         # --- log
         log_frame = ttk.LabelFrame(root, text="Log", padding=6)
@@ -459,9 +497,11 @@ class AdminApp:
         count = len(rows)
         new = sum(1 for r in rows if r["status"] == "new")
         self.status_var.set("%d order(s), %d waiting for payment" % (count, new))
-        self.mode.configure(text="DRY RUN — emails are saved, not sent"
-                            if self.config.get("dry_run") else "LIVE — emails are sent",
-                            foreground="#9a6700" if self.config.get("dry_run") else "#1a7f37")
+        auto = bool(self.config.get("smtp_password")) and not self.config.get("dry_run")
+        self.mode.configure(
+            text="AUTO — emails are sent for you" if auto
+            else "MANUAL — a ready email opens, you press Send",
+            foreground="#1a7f37" if auto else "#9a6700")
         if self.selected and not self.tree.exists(str(self.selected)):
             self.selected = None
             self.detail.configure(text="Select an order above.")
@@ -533,63 +573,50 @@ class AdminApp:
 
     def new_order(self):
         dialog = tk.Toplevel(self.root)
-        dialog.title("New order")
+        dialog.title("Add order")
         dialog.transient(self.root)
         dialog.grab_set()
-        dialog.geometry("460x300")
+        dialog.geometry("520x330")
 
-        ttk.Label(dialog, text="Paste the buyer's email text or fill the fields.",
-                  padding=10).pack(anchor="w")
-        paste = tk.Text(dialog, height=4, wrap="word")
-        paste.pack(fill="x", padx=10)
-        paste.insert("1.0", "Name: \nEmail: \nWhat: \n")
+        ttk.Label(dialog, text="Paste the buyer's message — I will find the email myself.",
+                  padding=(12, 12, 12, 4)).pack(anchor="w")
+        paste = tk.Text(dialog, height=8, wrap="word")
+        paste.pack(fill="both", expand=True, padx=12)
+        paste.focus_set()
 
-        form = ttk.Frame(dialog, padding=10)
-        form.pack(fill="x")
-        vars_ = {}
-        for i, (key, label) in enumerate([("name", "Name"), ("email", "Email"),
-                                          ("product", "Product"), ("amount", "Amount")]):
-            ttk.Label(form, text=label).grid(row=i, column=0, sticky="w", pady=2)
-            var = tk.StringVar(value={"product": "GrabKit Desktop",
-                                      "amount": ""}.get(key, ""))
-            ttk.Entry(form, textvariable=var, width=40).grid(row=i, column=1,
-                                                             sticky="ew", pady=2)
-            vars_[key] = var
-        form.columnconfigure(1, weight=1)
+        row = ttk.Frame(dialog, padding=12)
+        row.pack(fill="x")
+        ttk.Label(row, text="Product").pack(side="left")
+        product_var = tk.StringVar(
+            value=next(iter(self.config.get("products", {})), "GrabKit Desktop"))
+        ttk.Combobox(row, textvariable=product_var, state="readonly", width=26,
+                     values=list(self.config.get("products", {}))).pack(side="left", padx=8)
+        hint = ttk.Label(row, text="", style="Muted.TLabel")
+        hint.pack(side="left")
 
-        def fill_from_paste():
-            parsed = parse_order("", "", paste.get("1.0", "end"))
-            if parsed["email"]:
-                vars_["email"].set(parsed["email"])
-            if parsed["name"]:
-                vars_["name"].set(parsed["name"])
-            if parsed["note"]:
-                note_var.set(parsed["note"])
-
-        ttk.Button(dialog, text="Read from text", command=fill_from_paste
-                   ).pack(anchor="w", padx=10)
-        note_var = tk.StringVar()
-        ttk.Label(dialog, text="Note").pack(anchor="w", padx=10, pady=(8, 0))
-        ttk.Entry(dialog, textvariable=note_var).pack(fill="x", padx=10)
-
-        def save():
-            email_addr = vars_["email"].get().strip()
+        def add():
+            text = paste.get("1.0", "end")
+            parsed = parse_order("", "", text)
+            email_addr = parsed["email"]
             if "@" not in email_addr:
-                messagebox.showwarning("Email missing",
-                                       "A buyer email is required.", parent=dialog)
+                found = re.search(r"[\w.+-]+@[\w-]+\.[\w.]+", text)
+                email_addr = found.group(0) if found else ""
+            if "@" not in email_addr:
+                hint.configure(text="No email address found — add it to the text.")
                 return
             self.db.execute(
                 "INSERT INTO orders (created_at, name, email, product, amount,"
                 " status, note) VALUES (?,?,?,?,?,?,?)",
-                (now(), vars_["name"].get().strip(), email_addr,
-                 vars_["product"].get().strip() or "GrabKit Desktop",
-                 vars_["amount"].get().strip(),
-                 "new", note_var.get().strip()))
+                (now(), parsed["name"], email_addr, product_var.get(),
+                 self.config["products"].get(product_var.get(), {}).get("price", ""),
+                 "new", parsed["note"]))
             self.db.commit()
             dialog.destroy()
             self.refresh()
+            self.write("Order added: %s" % email_addr)
 
-        ttk.Button(dialog, text="Add order", command=save).pack(pady=10)
+        ttk.Button(dialog, text="Add order", command=add,
+                   style="Send.TButton").pack(pady=(0, 12))
 
     def set_status(self, status, order_id=None):
         oid = order_id or self.selected
@@ -623,12 +650,25 @@ class AdminApp:
         if row["status"] == "delivered":
             messagebox.showinfo("Already delivered", "This order was already sent.")
             return
-        prefix = "DRY RUN: no email will be sent.\n\n" if self.config.get("dry_run") else ""
+
+        auto = bool(self.config.get("smtp_password")) and not self.config.get("dry_run")
+        if not auto:
+            # Zero-setup path: no password needed, the mail app opens a ready draft.
+            if not messagebox.askyesno(
+                    "Send the product?",
+                    "Money from %s (%s) is on the card?\n\n"
+                    "A ready email with %s attached will open — press Send there."
+                    % (row["name"] or row["email"], row["amount"] or "—",
+                       row["product"])):
+                return
+            self.manual_delivery()
+            return
+
         if not messagebox.askyesno(
                 "Send the product?",
-                "%sMoney from %s (%s) is on the card?\n\n"
+                "Money from %s (%s) is on the card?\n\n"
                 "This will email %s to %s and mark the order delivered."
-                % (prefix, row["name"] or row["email"], row["amount"] or "—",
+                % (row["name"] or row["email"], row["amount"] or "—",
                    row["product"], row["email"])):
             return
 
@@ -699,109 +739,166 @@ class AdminApp:
                                                   "delivered_at", "note")])
         self.write("Exported %d order(s) to %s" % (len(rows), path))
 
-    # ---------- settings ----------
+    # ---------- one-screen setup ----------
     def open_settings(self):
         dialog = tk.Toplevel(self.root)
-        dialog.title("Settings")
+        dialog.title("Setup — one screen")
         dialog.transient(self.root)
         dialog.grab_set()
-        dialog.geometry("600x640")
+        dialog.geometry("560x330")
+        dialog.resizable(False, False)
 
-        notebook = ttk.Notebook(dialog)
-        notebook.pack(fill="both", expand=True, padx=10, pady=10)
+        frame = ttk.Frame(dialog, padding=16)
+        frame.pack(fill="both", expand=True)
+        frame.columnconfigure(1, weight=1)
 
-        # email tab
-        email_tab = ttk.Frame(notebook, padding=12)
-        notebook.add(email_tab, text="Email")
-        entries = {}
-        fields = [
-            ("smtp_host", "SMTP host"),
-            ("smtp_port", "SMTP port"),
-            ("smtp_user", "Your email (From)"),
-            ("smtp_password", "App password (SMTP)"),
-            ("from_name", "Display name"),
-            ("imap_host", "IMAP host"),
-            ("imap_user", "Inbox email"),
-            ("imap_password", "App password (IMAP)"),
-        ]
-        for i, (key, label) in enumerate(fields):
-            ttk.Label(email_tab, text=label).grid(row=i, column=0, sticky="w", pady=3)
-            entry = ttk.Entry(email_tab, width=42, show="*" if "password" in key else "")
-            entry.insert(0, str(self.config.get(key, "")))
-            entry.grid(row=i, column=1, sticky="ew", pady=3)
-            entries[key] = entry
-        email_tab.columnconfigure(1, weight=1)
+        ttk.Label(frame, text="Two fields, then you never touch this again.",
+                  style="Title.TLabel").grid(row=0, column=0, columnspan=2, sticky="w")
 
-        ttk.Label(email_tab, text=(
-            "Gmail: turn on 2-step verification, then create an App Password at\n"
-            "myaccount.google.com/apppasswords and paste it in both password fields.\n"
-            "Your normal password will not work."),
-            style="Muted.TLabel", justify="left").grid(row=len(fields), column=0,
-                                                       columnspan=2, sticky="w",
-                                                       pady=(10, 0))
+        ttk.Label(frame, text="Your email").grid(row=1, column=0, sticky="w", pady=(14, 4))
+        user_var = tk.StringVar(value=self.config.get("smtp_user", ""))
+        ttk.Entry(frame, textvariable=user_var, width=38).grid(row=1, column=1, sticky="ew",
+                                                               pady=(14, 4))
 
-        dry = tk.BooleanVar(value=bool(self.config.get("dry_run")))
-        ttk.Checkbutton(email_tab, text="Dry run — save emails to outbox/ instead of sending",
-                        variable=dry).grid(row=len(fields) + 1, column=0,
-                                           columnspan=2, sticky="w", pady=(10, 0))
+        ttk.Label(frame, text="App password").grid(row=2, column=0, sticky="w", pady=4)
+        pwd_var = tk.StringVar(value=self.config.get("smtp_password", ""))
+        ttk.Entry(frame, textvariable=pwd_var, show="*", width=38).grid(
+            row=2, column=1, sticky="ew", pady=4)
 
-        # products tab
-        prod_tab = ttk.Frame(notebook, padding=12)
-        notebook.add(prod_tab, text="Products")
-        prod_rows = []
-        ttk.Label(prod_tab, text="Product name", style="Muted.TLabel"
-                  ).grid(row=0, column=0, sticky="w")
-        ttk.Label(prod_tab, text="Price", style="Muted.TLabel"
-                  ).grid(row=0, column=1, sticky="w")
-        ttk.Label(prod_tab, text="File to send", style="Muted.TLabel"
-                  ).grid(row=0, column=2, sticky="w")
-        for i, (name, info) in enumerate(self.config.get("products", {}).items(), start=1):
-            name_var = tk.StringVar(value=name)
-            price_var = tk.StringVar(value=info.get("price", ""))
-            file_var = tk.StringVar(value=info.get("file", ""))
-            ttk.Entry(prod_tab, textvariable=name_var, width=22
-                      ).grid(row=i, column=0, pady=3, sticky="ew")
-            ttk.Entry(prod_tab, textvariable=price_var, width=10
-                      ).grid(row=i, column=1, pady=3, padx=6, sticky="ew")
-            ttk.Entry(prod_tab, textvariable=file_var, width=30
-                      ).grid(row=i, column=2, pady=3, sticky="ew")
-            ttk.Button(prod_tab, text="…", width=3,
-                       command=lambda v=file_var: v.set(
-                           filedialog.askopenfilename(filetypes=[("ZIP", "*.zip"),
-                                                                 ("All files", "*.*")])
-                           or v.get())).grid(row=i, column=3, padx=(6, 0))
-            prod_rows.append((name_var, price_var, file_var))
-        prod_tab.columnconfigure(2, weight=1)
+        hint = ttk.Label(frame, text=(
+            "Gmail → myaccount.google.com/apppasswords → create → copy 16 letters.\n"
+            "Your normal password will not work — Google blocks it."),
+            style="Muted.TLabel", justify="left")
+        hint.grid(row=3, column=0, columnspan=2, sticky="w", pady=(4, 2))
 
-        # template tab
-        tpl_tab = ttk.Frame(notebook, padding=12)
-        notebook.add(tpl_tab, text="Email text")
-        template = tk.Text(tpl_tab, wrap="word", height=22, font=("Consolas", 9))
-        template.pack(fill="both", expand=True)
-        template.insert("1.0", self.config.get("template", ""))
-        ttk.Label(tpl_tab, text="Placeholders: {name} {product} {price}",
-                  style="Muted.TLabel").pack(anchor="w", pady=(6, 0))
+        ttk.Button(frame, text="Open that page in the browser",
+                   command=lambda: webbrowser.open(
+                       "https://myaccount.google.com/apppasswords")
+                   ).grid(row=4, column=0, columnspan=2, sticky="w", pady=(2, 10))
 
-        def save():
-            for key, entry in entries.items():
-                value = entry.get().strip()
-                self.config[key] = int(value) if key == "smtp_port" and value.isdigit() else value
-            self.config["dry_run"] = bool(dry.get())
-            self.config["products"] = {
-                name_var.get().strip(): {"price": price_var.get().strip(),
-                                         "file": file_var.get().strip()}
-                for name_var, price_var, file_var in prod_rows
-                if name_var.get().strip()
-            }
-            self.config["template"] = template.get("1.0", "end").rstrip() + "\n"
+        status = ttk.Label(frame, text="", style="Muted.TLabel")
+        status.grid(row=5, column=0, columnspan=2, sticky="w")
+
+        buttons = ttk.Frame(frame)
+        buttons.grid(row=6, column=0, columnspan=2, sticky="e", pady=(14, 0))
+
+        def save_and_test():
+            user = user_var.get().strip()
+            password = pwd_var.get().strip().replace(" ", "")
+            if "@" not in user or len(password) < 8:
+                status.configure(text="Fill both fields (the password is 16 characters).")
+                return
+            domain = user.split("@")[-1].lower()
+            self.config["smtp_user"] = user
+            self.config["imap_user"] = user
+            self.config["smtp_password"] = password
+            self.config["imap_password"] = password
+            self.config["from_name"] = self.config.get("from_name") or "GrabKit"
+            if domain == "gmail.com":
+                self.config["smtp_host"], self.config["smtp_port"] = "smtp.gmail.com", 465
+                self.config["imap_host"] = "imap.gmail.com"
+            elif not self.config.get("smtp_host"):
+                self.config["smtp_host"], self.config["smtp_port"] = (
+                    "smtp." + domain, 465)
+                self.config["imap_host"] = "imap." + domain
+            self.config["dry_run"] = False
             save_config(self.config)
-            dialog.destroy()
-            self.refresh()
-            self.write("Settings saved.")
+            status.configure(text="Testing login…")
+            dialog.update_idletasks()
 
-        ttk.Button(dialog, text="Save", command=save).pack(pady=(0, 10))
-        ttk.Button(dialog, text="Save & send test",
-                   command=lambda: (save(), self.test_email())).pack(pady=(0, 10))
+            def worker():
+                try:
+                    send_email(self.config, build_test_message(self.config))
+                    self.root.after(0, lambda: self._setup_ok(dialog))
+                except Exception as exc:
+                    self.root.after(0, lambda: self._setup_failed(dialog, status, exc))
+
+            threading.Thread(target=worker, daemon=True).start()
+
+        ttk.Button(buttons, text="Save & send test", command=save_and_test,
+                   style="Send.TButton").pack(side="right")
+        ttk.Button(buttons, text="Skip — I will send by hand",
+                   command=lambda: self._skip_setup(dialog)).pack(side="right", padx=8)
+
+    def _skip_setup(self, dialog):
+        self.config["setup_dismissed"] = True
+        save_config(self.config)
+        dialog.destroy()
+        self.write("Automatic email is off. Use 'No email? Deliver by hand' "
+                   "(it opens a ready draft with the file attached).")
+
+    def _setup_ok(self, dialog):
+        dialog.destroy()
+        self.refresh()
+        messagebox.showinfo("Ready",
+                            "Setup works. Check your inbox for the test email.\n\n"
+                            "From now on: select an order → Confirm payment & send.")
+        self.write("Setup completed, live mode on.")
+
+    def _setup_failed(self, dialog, status, exc):
+        status.configure(text="Failed: %s" % exc)
+        self.config["dry_run"] = True
+        save_config(self.config)
+        messagebox.showerror(
+            "Setup failed",
+            "%s\n\nMost common causes:\n"
+            "• 2-step verification is off in Google (app passwords need it on)\n"
+            "• the password was typed with spaces or is the normal Gmail password\n"
+            "• the account is not a @gmail.com address" % exc)
+
+    # ---------- manual delivery (no password needed) ----------
+    def manual_delivery(self):
+        row = self.current()
+        if row is None:
+            messagebox.showinfo("No order", "Select an order first.")
+            return
+        msg, path = build_email(self.config, dict(row))
+        if msg is None:
+            messagebox.showinfo("Product missing", "Set the ZIP file first (Setup).")
+            return
+
+        # Best case: the mail app opens a ready draft with the ZIP already attached.
+        OUTBOX.mkdir(exist_ok=True)
+        safe = re.sub(r"[^A-Za-z0-9@._-]", "_", row["email"])
+        draft = OUTBOX / ("draft_%s.eml" % safe)
+        draft.write_bytes(msg.as_bytes())
+        opened = False
+        try:
+            os.startfile(str(draft))  # noqa: S606 - opens the user's mail client
+            opened = True
+        except Exception:
+            opened = False
+
+        if not opened:
+            text = msg.get_content()
+            self.root.clipboard_clear()
+            self.root.clipboard_append(text)
+            if path.is_file():
+                try:
+                    subprocess.Popen(["explorer", "/select,", str(path)])
+                except Exception:
+                    pass
+
+        self.db.execute("UPDATE orders SET status='delivered', delivered_at=? WHERE id=?",
+                        (now(), row["id"]))
+        self.db.commit()
+        self.refresh()
+        self.write("Manual delivery for %s — draft saved to %s"
+                   % (row["email"], draft.name))
+        if opened:
+            messagebox.showinfo(
+                "Almost done",
+                "Your mail app opened a ready email with the ZIP attached.\n\n"
+                "Press Send in that window.\n\n"
+                "Order marked as delivered.")
+        else:
+            messagebox.showinfo(
+                "Almost done",
+                "No mail app was found, so:\n"
+                "• the message text is on your clipboard\n"
+                "• the ZIP is selected in Explorer\n\n"
+                "Paste the text into Telegram/email and drag the ZIP in.\n\n"
+                "Order marked as delivered.")
 
 
 def main():
@@ -809,6 +906,7 @@ def main():
     AdminApp(root)
     root.mainloop()
     return 0
+
 
 
 if __name__ == "__main__":
