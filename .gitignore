@@ -3,3 +3,13 @@ __pycache__/
 
 # Paid build artifacts: never publish these, they are what buyers pay for.
 GrabKit-Desktop-*.zip
+
+# Real payment details. Never commit a full card number.
+PAYMENT.local.md
+*.local.md
+
+# Admin runtime files: credentials, orders, logs.
+admin/config.json
+admin/orders.db
+admin/outbox/
+admin/admin.log

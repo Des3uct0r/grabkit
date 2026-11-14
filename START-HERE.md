@@ -17,20 +17,27 @@ So there are two offers, and the order matters:
 
 ## Do these three things today
 
-1. **Open `SALES-KIT/ua-direct-sales.md`** → do section 2 (bank jar, 15 min) and post
-   the text from section 4 on OLX + 2 Telegram chats. That is the first real lead.
-2. **Open `SALES-KIT/fiverr-service-gig.md`** → edit the two live gigs to the service version.
+1. **Payment is ready.** `PAYMENT.local.md` (not published) has the card, the exact reply
+   template and the safety rules. Post only `•••• 9267` publicly; the full number goes in
+   the reply to a real buyer. A Monobank jar link is still better if you can make one.
+2. **Open `SALES-KIT/ua-direct-sales.md`** → post the text from section 4 on OLX + 2 Telegram
+   chats. That is the first real lead.
+3. **Open `SALES-KIT/fiverr-service-gig.md`** → edit the two live gigs to the service version.
    Don't create new ones; edit, because live gigs already have history.
-3. **Email three people you know** whose computer is a mess. Say: "I'll tidy your files,
+4. **Email three people you know** whose computer is a mess. Say: "I'll tidy your files,
    free, in exchange for a one-line review." Reviews are the only thing you cannot buy later.
 
 ## What was built in this session
 
 - `dev-tool-pack/grabkit_gui.py` + `Start GrabKit.bat` — the paid product now exists:
   16 tools in one window, no terminal. Tested end to end (all 16 run, exit 0).
+- `admin/` — **order desk with one-click delivery**: buyer order email → Sync inbox →
+  confirm the money → the ZIP is emailed to the buyer automatically. Local, no hosting.
+  Start with `admin/Start Admin.bat`; setup is in `admin/README.md` (10 minutes).
 - `pro.html` — checkout page that needs no payment processor (email → card → file).
 - `SALES-KIT/ua-direct-sales.md` — prices, where to post, exact Ukrainian texts, reply scripts.
 - `SALES-KIT/fiverr-service-gig.md` — three service gigs, copy-paste ready.
+- `PAYMENT.local.md` — card details, payment reply templates, safety rules (never published).
 - `GrabKit-Desktop-v1.1.zip` (local only, git-ignored) — what buyers receive.
 
 ## Numbers to keep in your head
