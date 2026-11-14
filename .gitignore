@@ -1,15 +1,25 @@
 __pycache__/
 *.pyc
 
-# Paid build artifacts: never publish these, they are what buyers pay for.
+# Paid build artifacts and source: never publish these, they are what buyers pay for.
 GrabKit-Desktop-*.zip
+/paid/
+/dev-tool-pack/grabkit_gui.py
+/dev-tool-pack/Start GrabKit.bat
 
 # Real payment details. Never commit a full card number.
 PAYMENT.local.md
 *.local.md
 
-# Admin runtime files: credentials, orders, logs.
-admin/config.json
-admin/orders.db
-admin/outbox/
-admin/admin.log
+# Seller-side tooling and internal sales notes (kept locally, not in the public repo).
+/admin/
+/SALES-KIT/
+/MARKETING-KIT/
+/FREE-LEAD-MAGNET/
+/START-HERE.md
+/ETSY-SETUP.md
+/GITHUB-README.md
+
+# Download archives are published on the Releases page, not committed.
+/GrabKit-v1.zip
+/GrabKit-v1.1.zip

@@ -1,79 +1,101 @@
-# GrabKit вЂ” 12 Ready-to-Run Automation Scripts
+# GrabKit — 12 free Python tools for files, photos and PDFs
 
-**Organize files, find duplicates, resize photos, merge PDFs, back up folders вЂ” in one command. No coding needed.**
+**Organize files, find duplicates, resize photos, merge PDFs, back up folders — one command each. No coding needed.**
 
 [![Free download](https://img.shields.io/badge/Download-free-release-blue?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases/latest)
 [![GitHub release](https://img.shields.io/github/v/release/Des3uct0r/grabkit?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases)
-[![GitHub stars](https://img.shields.io/github/stars/Des3uct0r/grabkit?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/Des3uct0r/grabkit/total?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
 ---
 
-## What is GrabKit?
+## GrabKit in 10 seconds
 
-GrabKit is a pack of 12 small Python scripts that automate the boring file tasks you do every month:
+- **Free:** 12 command-line scripts, MIT licensed. Download, unzip, run.
+- **Paid ($9 / 249 ₴):** [GrabKit Desktop](https://des3uct0r.github.io/grabkit/pro.html) — the same 12 tools **plus 4 Pro ones** in a point-and-click window. No terminal.
 
-- рџ“‚ **File Organizer** вЂ” sorts Downloads into Images / Documents / Audio / Video / Archives in seconds
-- рџ”Ќ **Duplicate Finder** вЂ” finds duplicate files by *content*, not filename вЂ” shows wasted space per group
-- рџ“Џ **Folder Size** вЂ” see what's eating your disk, largest first
-- рџ’ѕ **Backup Zip** вЂ” one-command timestamped backup of any folder
-- вњЏпёЏ **Bulk Rename** вЂ” rename 500 photos (number, lowercase, prefix) with preview
-- рџ”„ **Find & Replace** вЂ” replace text across hundreds of files, with automatic .bak backups
-- рџ“Љ **CSV Toolkit** вЂ” merge, split, count, preview CSV files
-- рџ“„ **Text Diff** вЂ” compare two text files line by line
-- рџ“‘ **PDF Toolkit** вЂ” merge, split, extract pages, inspect PDFs
-- рџ–јпёЏ **Image Resizer** вЂ” bulk-resize/convert photos for email or web, originals untouched
-- рџ”— **Link Scraper** вЂ” pull every link from any web page into CSV
-- рџ”ђ **Password Tools** вЂ” generate strong passwords; check how strong one is
+Everything runs locally. Nothing is uploaded, no account, no signup.
 
-## Why GrabKit?
+**[Download the free pack →](https://github.com/Des3uct0r/grabkit/releases/latest)**
 
-- **Runs anywhere** вЂ” Windows, Mac, Linux. Just free Python (2-minute setup guide included)
-- **Safe by default** вЂ” everything previews before it changes anything; nothing is deleted without your confirmation
-- **No dependencies** вЂ” 9 of 12 tools use only what's already in Python; the other 3 tell you the one-line install if you want them
-- **Plain-English README** вЂ” every tool has copy-paste examples
-- **30-day refund** вЂ” no questions asked
-- **Lifetime updates** вЂ” buy once, get every future tool added
+---
+
+## The 12 free tools
+
+| # | Tool | What it does |
+|---|------|--------------|
+| 1 | **File Organizer** | Sorts Downloads into Images / Documents / Audio / Video / Archives |
+| 2 | **Duplicate Finder** | Finds duplicates by *content*, not filename; shows wasted space |
+| 3 | **Folder Size** | Shows what's eating your disk, largest first |
+| 4 | **Backup Zip** | One-command timestamped backup of any folder |
+| 5 | **Bulk Rename** | Renames 500 photos (prefix, numbering, lowercase) with preview |
+| 6 | **Find & Replace** | Replaces text across hundreds of files, with automatic `.bak` copies |
+| 7 | **CSV Toolkit** | Merge, split, count and preview CSV files |
+| 8 | **Text Diff** | Compares two text files line by line |
+| 9 | **PDF Toolkit** | Merge, split, extract pages, inspect PDFs |
+| 10 | **Image Resizer** | Bulk-resize/convert photos; originals untouched |
+| 11 | **Link Scraper** | Pulls every link from a web page into CSV |
+| 12 | **Password Tools** | Generates and checks strong passwords locally |
+
+Every tool previews what it will do before it changes anything.
 
 ## Quick start
 
 ```bash
 # 1. Install Python (free): https://python.org
-# 2. Download GrabKit and unzip
+# 2. Download the ZIP from Releases and unzip it
 # 3. Open a terminal in the scripts/ folder
 
-# Organize your Downloads folder (preview first):
-python file_organizer.py ~/Downloads --dry-run
-
-# Find duplicate files:
-python duplicate_finder.py ~/Pictures
-
-# Back up a folder:
-python backup_zip.py ~/Documents
+python file_organizer.py ~/Downloads --dry-run   # preview the plan
+python duplicate_finder.py ~/Pictures            # find duplicates
+python backup_zip.py ~/Documents                 # back up a folder
 ```
 
-## Requirements
-
-- Python 3.8+ (free)
-- That's it.
-
-## Get GrabKit
-
-**[Download GrabKit free on GitHub в†’](https://github.com/Des3uct0r/grabkit/releases/latest)**
-
-Free preview + full pack. 30-day refund if you buy the paid version. Lifetime updates.
-
-Prefer clicking to typing? **[GrabKit Desktop](https://des3uct0r.github.io/grabkit/pro.html)** puts
-all 16 tools in one window вЂ” pick a tool, pick a folder, press Run. 249 в‚ґ ($9), 30-day refund.
-
-## License
-
-MIT вЂ” see [LICENSE](LICENSE).
-
-## Support
-
-Questions? Open an issue or email sviatpukas21@gmail.com.
+Requirements: **Python 3.8+**. Nine tools need nothing else; the PDF and image tools
+install with one command (`pip install -r requirements.txt`).
 
 ---
 
-*Built by [@sviatoslavpu](https://github.com/sviatoslavpu)*
+## GrabKit Desktop — $9 / 249 ₴
+
+Point-and-click version for people who do not want a terminal.
+
+- **16 tools in one window** — pick a tool, pick a folder, press **Run**
+- **4 Pro tools** included: auto-sort new files, watermark photos, CSV cleanup (dedupe/filter/stats), folder sync
+- **Ukrainian and English** setup guide
+- Preview of every change before it touches your files
+- 30 days of email support and free updates
+- **30-day refund**, no questions asked
+
+**[See what's inside and order →](https://des3uct0r.github.io/grabkit/pro.html)**
+
+The scripts stay free and MIT licensed. The desktop app is the paid part — that is what
+pays for the support, the guides and the extra tools.
+
+---
+
+## FAQ
+
+**Do I need to know how to code?**
+No. The free scripts need a terminal; the desktop app does not.
+
+**Is it safe?**
+Everything runs on your computer. Nothing is uploaded. Destructive actions ask for
+confirmation, and most tools show a preview first.
+
+**What if it does not work?**
+Email me. If we cannot make it run, you get a refund within 30 days.
+
+**Can you do the work for me?**
+Yes — send the folder size and what you need, and I quote a fixed price.
+
+## License
+
+The 12 scripts are **MIT** — see [LICENSE](LICENSE). GrabKit Desktop is a paid product.
+
+## Support
+
+Open an issue or email **sviatpukas21@gmail.com**.
+
+---
+
+*Built by [@Des3uct0r](https://github.com/Des3uct0r).*
