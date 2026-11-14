@@ -26,3 +26,8 @@ PAYMENT.local.md
 
 # No sponsor button: the checkout page is linked in the README.
 /.github/FUNDING.yml
+
+# Keep only the two screenshots used by the live site; the rest are local marketing assets.
+/GIG-IMAGES/*
+!/GIG-IMAGES/grabkit-desktop.png
+!/GIG-IMAGES/gumroad-cover.png
