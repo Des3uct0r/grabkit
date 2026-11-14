@@ -8,9 +8,9 @@ Requires the Pillow library:
     pip install Pillow
 
 Usage examples:
-    python image_resizer.py C:\\photos --max-width 1200
-    python image_resizer.py C:\\photos --max-width 1200 --format jpg --quality 85
-    python image_resizer.py C:\\photos --max-width 800 --out C:\\web-images --overwrite
+    python image_resizer.py C:/photos --max-width 1200
+    python image_resizer.py C:/photos --max-width 1200 --format jpg --quality 85
+    python image_resizer.py C:/photos --max-width 800 --out C:/web-images --overwrite
 
 Exit codes: 0 = success (even with some skipped files), 1 = fatal error,
 2 = wrong command line usage.
@@ -142,9 +142,9 @@ def main():
                     "Originals are never modified unless you use --overwrite "
                     "without --out (in-place mode).",
         epilog="Examples:\n"
-               "  python image_resizer.py C:\\photos --max-width 1200\n"
-               "  python image_resizer.py C:\\photos --max-width 1200 --format jpg\n"
-               "  python image_resizer.py C:\\photos --max-width 800 --out C:\\web --overwrite",
+               "  python image_resizer.py C:/photos --max-width 1200\n"
+               "  python image_resizer.py C:/photos --max-width 1200 --format jpg\n"
+               "  python image_resizer.py C:/photos --max-width 800 --out C:/web --overwrite",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("folder", help="folder containing the images")

@@ -4,9 +4,9 @@
 Read-only. Great for freeing disk space quickly.
 
 Usage:
-    python find_big_files.py C:\Users\me
-    python find_big_files.py C:\ --top 20
-    python find_big_files.py C:\Users\me --min 100  (only files >= 100 MB)
+    python find_big_files.py C:/Users/me
+    python find_big_files.py C:/ --top 20
+    python find_big_files.py C:/Users/me --min 100  (only files >= 100 MB)
 """
 import argparse, os, sys
 from pathlib import Path

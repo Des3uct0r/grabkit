@@ -4,8 +4,8 @@
 Read-only. Safe to run; nothing is deleted.
 
 Usage:
-    python find_empty_folders.py C:\Users\me
-    python find_empty_folders.py C:\Users\me --delete   (asks for confirmation)
+    python find_empty_folders.py C:/Users/me
+    python find_empty_folders.py C:/Users/me --delete   (asks for confirmation)
 """
 import argparse, os, sys
 from pathlib import Path

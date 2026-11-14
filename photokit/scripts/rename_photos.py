@@ -5,10 +5,10 @@ The default behavior is a DRY RUN: it only SHOWS what would happen.
 Nothing is renamed until you add --apply.
 
 Usage examples:
-    python bulk_rename.py C:\\photos --number
-    python bulk_rename.py C:\\photos --ext-filter .jpg --lower --apply
-    python bulk_rename.py C:\\docs --replace 2023_ 2024_ --prefix scan_
-    python bulk_rename.py C:\\photos --suffix _final --ext-filter .png
+    python bulk_rename.py C:/photos --number
+    python bulk_rename.py C:/photos --ext-filter .jpg --lower --apply
+    python bulk_rename.py C:/docs --replace 2023_ 2024_ --prefix scan_
+    python bulk_rename.py C:/photos --suffix _final --ext-filter .png
 
 Modes (can be combined, applied in this order):
     --replace OLD NEW   replace the first occurrence of OLD in each name

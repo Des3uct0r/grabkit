@@ -5,9 +5,9 @@ Re-encodes images at a lower quality / optimized palette. Originals untouched;
 results go to a "compressed" subfolder unless --overwrite is used.
 
 Usage:
-    python compress_photos.py C:\photos
-    python compress_photos.py C:\photos --quality 70
-    python compress_photos.py C:\photos --out C:\small --overwrite
+    python compress_photos.py C:/photos
+    python compress_photos.py C:/photos --quality 70
+    python compress_photos.py C:/photos --out C:/small --overwrite
 
 Requires Pillow: pip install Pillow
 """
@@ -32,7 +32,7 @@ def main():
     ap = argparse.ArgumentParser(description="Compress images to smaller files.")
     ap.add_argument("folder", help="folder with images")
     ap.add_argument("--quality", type=int, default=75, help="JPEG/WebP quality 1-95 (default 75)")
-    ap.add_argument("--out", help="output folder (default: <folder>\\compressed)")
+    ap.add_argument("--out", help="output folder (default: <folder>/compressed)")
     ap.add_argument("--overwrite", action="store_true", help="overwrite existing results")
     args = ap.parse_args()
 

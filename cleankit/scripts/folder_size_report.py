@@ -3,9 +3,9 @@
 sorted largest first, with a grand total.
 
 Usage examples:
-  python folder_size.py C:\\Users\\me
-  python folder_size.py C:\\Users\\me\\Downloads --depth 2
-  python folder_size.py C:\\Users\\me --files
+  python folder_size.py C:/Users/me
+  python folder_size.py C:/Users/me/Downloads --depth 2
+  python folder_size.py C:/Users/me --files
 
 Read-only: this script never changes anything on disk.
 """
@@ -62,7 +62,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Show the size of each first-level subfolder, largest first."
     )
-    parser.add_argument("path", help="Folder to measure, e.g. C:\\Users\\me")
+    parser.add_argument("path", help="Folder to measure, e.g. C:/Users/me")
     parser.add_argument("--depth", type=int, default=1, metavar="N",
                         help="How many levels deep to list (default: 1)")
     parser.add_argument("--files", action="store_true",
