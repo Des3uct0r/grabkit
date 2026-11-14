@@ -41,3 +41,19 @@ Use `SALES-KIT/etsy-listing.md` (copy/paste ready):
 - Etsy listing images: ready (`GIG-IMAGES/etsy-hero.png`, `etsy-inside.png`, `etsy-how.png`)
 - Etsy file: ready (`GrabKit-v1.zip`)
 - Blocked on: your Payoneer signup + Etsy shop creation (both need your identity/bank details — cannot be automated or faked)
+
+## Alternative: Freelancehunt (Ukrainian clients, UAH cards)
+- Ukraine-based marketplace (freelancehunt.com), 1.2M+ freelancers, escrow (Сейф) for every project, funds released to your card on completion
+- UAH payouts to a Ukrainian Visa/Mastercard (5% withdrawal fee), USD/EUR via Payoneer for foreign clients, invoice via "Фриланс Рахунок" (Freelancehunt issues invoices on your behalf as a European legal entity — works even for clients found outside FH)
+- Verification is via Ukrainian documents: passport / driver's license / BankID / Дія.Підпис — practically an 18+ workflow
+- 0% project commission; 5% withdrawal fee; min. project budget 500–700 UAH
+- Account flow: register as freelancer → profile verification → fill portfolio (3 works) → bid on projects → client reserves funds via Сейф → you deliver → funds to your card
+- For a minor: needs a parent/legal guardian's account or BankID-compatible adult supervision — same 18+ constraint as everywhere
+
+## Alternative: Upwork (international, highest value)
+- UPWORK is 18+, **no guardian route** — only available once you turn 18
+- Verification via ID; payout via Payoneer/bank/wire; hourly or fixed-price
+- Highest pay, most competition, hardest to win without reviews — realistic path is Fiverr/Freelancehunt first, build portfolio, Upwork at 18+
+
+## Gumroad — removed
+Gumroad was ruled out (Ukraine payout blocked; account can't publish). All repo links updated to the GitHub release / GitHub Pages.

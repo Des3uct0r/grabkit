@@ -2,7 +2,7 @@
 
 **Organize files, find duplicates, resize photos, merge PDFs, back up folders — in one command. No coding needed.**
 
-[![Gumroad](https://img.shields.io/badge/Buy%20on-Gumroad-ff90e8?style=for-the-badge)](https://gumroad.com/l/grabkit-automation-scripts)
+[![Free download](https://img.shields.io/badge/Download-free-release-blue?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases/tag/v1.0)
 [![GitHub release](https://img.shields.io/github/v/release/Des3uct0r/grabkit?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases)
 [![GitHub stars](https://img.shields.io/github/stars/Des3uct0r/grabkit?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/Des3uct0r/grabkit/total?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases)
@@ -59,11 +59,9 @@ python backup_zip.py ~/Documents
 
 ## Get GrabKit
 
-**[Download GrabKit on GitHub →](https://github.com/Des3uct0r/grabkit)**
+**[Download GrabKit free on GitHub →](https://github.com/Des3uct0r/grabkit/releases/tag/v1.0)**
 
-Also available on Gumroad ($9.99): https://gumroad.com/l/grabkit-automation-scripts (coming soon)
-
-Pay-what-you-want with $5 minimum. 30-day refund. Lifetime updates.
+Free preview + full pack. 30-day refund if you buy the paid version. Lifetime updates.
 
 ## License
 

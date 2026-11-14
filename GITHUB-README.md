@@ -2,7 +2,7 @@
 
 **Organize files, find duplicates, resize photos, merge PDFs, back up folders — in one command. No coding needed.**
 
-[![Gumroad](https://img.shields.io/badge/Buy%20on-Gumroad-ff90e8?style=for-the-badge)](https://gumroad.com/l/grabkit-automation-scripts)
+[![Download](https://img.shields.io/badge/Download-free-release-blue?style=for-the-badge)](https://github.com/Des3uct0r/grabkit/releases/tag/v1.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
@@ -57,9 +57,9 @@ python backup_zip.py ~/Documents
 
 ## Get GrabKit
 
-**[$9.99 on Gumroad →](https://gumroad.com/l/grabkit-automation-scripts)**
+**[Free download on GitHub →](https://github.com/Des3uct0r/grabkit/releases/tag/v1.0)**
 
-Pay-what-you-want with $5 minimum. 30-day refund. Lifetime updates.
+Everything in this repo, plus the 3 paid-pro tools. 30-day refund on the paid version. Lifetime updates.
 
 ## License
 
