@@ -1,6 +1,6 @@
-# GrabKit Free — 3 Essential File Automation Scripts
+# GrabKit Free вЂ” 3 Essential File Automation Scripts
 
-**Free sample of GrabKit** — 3 of the 12 scripts, no strings attached. Get the full pack free at the [GitHub release →](https://github.com/Des3uct0r/grabkit/releases/tag/v1.0)
+**Free sample of GrabKit** вЂ” 3 of the 12 scripts, no strings attached. Get the full pack free at the [GitHub release в†’](https://github.com/Des3uct0r/grabkit/releases/latest)
 
 ## What's included (free)
 
@@ -17,7 +17,7 @@ The full GrabKit pack adds 9 more tools:
 
 Plus: 2-minute setup guide, plain-English README with copy-paste examples, 30-day refund, lifetime updates.
 
-**[Download the full free preview on GitHub →](https://github.com/Des3uct0r/grabkit/releases/tag/v1.0)**
+**[Download the full free preview on GitHub в†’](https://github.com/Des3uct0r/grabkit/releases/latest)**
 
 ## Quick start (free scripts)
 
