@@ -32,6 +32,7 @@ from email.header import decode_header, make_header
 from email.message import EmailMessage
 from email.utils import formataddr, parseaddr
 from pathlib import Path
+from urllib.parse import quote
 
 try:
     import tkinter as tk
@@ -857,48 +858,51 @@ class AdminApp:
             messagebox.showinfo("Product missing", "Set the ZIP file first (Setup).")
             return
 
-        # Best case: the mail app opens a ready draft with the ZIP already attached.
+        body = msg.get_content()
+        subject = str(msg["Subject"])
+        # 1. text on the clipboard, so nothing depends on a mail client
+        self.root.clipboard_clear()
+        self.root.clipboard_append(body)
+        # 2. the ZIP selected in Explorer, ready to drag into the message
+        if path.is_file():
+            try:
+                subprocess.Popen(["explorer", "/select,", str(path)])
+            except Exception:
+                pass
+        # 3. an empty compose window with To/Subject/body already filled
+        mailto = ("mailto:%s?subject=%s&body=%s"
+                  % (row["email"], quote(subject), quote(body[:1500])))
+        compose_opened = False
+        try:
+            os.startfile(mailto)  # noqa: S606 - opens the default mail handler
+            compose_opened = True
+        except Exception:
+            compose_opened = False
+
+        # 4. also leave a .eml draft, for mail apps where that works better
         OUTBOX.mkdir(exist_ok=True)
         safe = re.sub(r"[^A-Za-z0-9@._-]", "_", row["email"])
         draft = OUTBOX / ("draft_%s.eml" % safe)
         draft.write_bytes(msg.as_bytes())
-        opened = False
-        try:
-            os.startfile(str(draft))  # noqa: S606 - opens the user's mail client
-            opened = True
-        except Exception:
-            opened = False
-
-        if not opened:
-            text = msg.get_content()
-            self.root.clipboard_clear()
-            self.root.clipboard_append(text)
-            if path.is_file():
-                try:
-                    subprocess.Popen(["explorer", "/select,", str(path)])
-                except Exception:
-                    pass
 
         self.db.execute("UPDATE orders SET status='delivered', delivered_at=? WHERE id=?",
                         (now(), row["id"]))
         self.db.commit()
         self.refresh()
-        self.write("Manual delivery for %s — draft saved to %s"
+        self.write("Delivery for %s: message copied, ZIP selected, draft saved (%s)"
                    % (row["email"], draft.name))
-        if opened:
-            messagebox.showinfo(
-                "Almost done",
-                "Your mail app opened a ready email with the ZIP attached.\n\n"
-                "Press Send in that window.\n\n"
-                "Order marked as delivered.")
-        else:
-            messagebox.showinfo(
-                "Almost done",
-                "No mail app was found, so:\n"
-                "• the message text is on your clipboard\n"
-                "• the ZIP is selected in Explorer\n\n"
-                "Paste the text into Telegram/email and drag the ZIP in.\n\n"
-                "Order marked as delivered.")
+        messagebox.showinfo(
+            "Almost done",
+            "Three things are ready:\n\n"
+            "• the email text is on your clipboard\n"
+            "• the ZIP is selected in Explorer\n"
+            "• a new email window is open (if a mail app is installed)\n\n"
+            "Drag the ZIP into the email and press Send."
+            if compose_opened else
+            "No mail app answered, but nothing is lost:\n\n"
+            "• the email text is on your clipboard\n"
+            "• the ZIP is selected in Explorer\n\n"
+            "Paste the text into Telegram or Gmail in the browser and drag the ZIP in.")
 
 
 def main():
