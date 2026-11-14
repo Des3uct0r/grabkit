@@ -31,3 +31,6 @@ PAYMENT.local.md
 /GIG-IMAGES/*
 !/GIG-IMAGES/grabkit-desktop.png
 !/GIG-IMAGES/gumroad-cover.png
+
+PhotoKit-Desktop-*.zip
+CleanKit-Desktop-*.zip
