@@ -31,9 +31,9 @@ So there are two offers, and the order matters:
 
 - `dev-tool-pack/grabkit_gui.py` + `Start GrabKit.bat` — the paid product now exists:
   16 tools in one window, no terminal. Tested end to end (all 16 run, exit 0).
-- `admin/` — **order desk with one-click delivery**: buyer order email → Sync inbox →
-  confirm the money → the ZIP is emailed to the buyer automatically. Local, no hosting.
-  Start with `admin/Start Admin.bat`; setup is in `admin/README.md` (10 minutes).
+- `admin/` — **order desk, zero setup**: paste the buyer's message → confirm the money →
+  one button opens a ready email with the ZIP attached (or sends it silently if you
+  later add an app password). Start with `admin/Start Admin.bat`.
 - `pro.html` — checkout page that needs no payment processor (email → card → file).
 - `SALES-KIT/ua-direct-sales.md` — prices, where to post, exact Ukrainian texts, reply scripts.
 - `SALES-KIT/fiverr-service-gig.md` — three service gigs, copy-paste ready.
